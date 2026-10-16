@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Đặt Sân Bóng Thông Minh</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; background: #f4f7f6; }
+        h1, h2 { color: #2c3e50; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #27ae60; color: white; border: none; padding: 10px 15px; margin-top: 15px; cursor: pointer; border-radius: 4px; font-size: 16px; }
+        button:hover { background: #219653; }
+        .field-list { display: flex; gap: 15px; flex-wrap: wrap; }
+        .field-item { background: #e8f8f5; padding: 15px; border-radius: 6px; border: 1px solid #a3e4d7; flex: 1; min-width: 200px; }
+        #message { margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>⚽ Quản Lý Sân Bóng Thông Minh</h1>
+
+    <!-- Danh sách sân -->
+    <div class="card">
+        <h2>Danh sách Sân Bóng</h2>
+        <div id="fieldsContainer" class="field-list">Đang tải danh sách sân...</div>
+    </div>
+
+    <!-- Form đặt sân -->
+    <div class="card">
+        <h2>Đặt Sân Trực Tuyến</h2>
+        <form id="bookingForm">
+            <label for="field_id">Chọn Sân:</label>
+            <select id="field_id" required>
+                <!-- Được load tự động bằng JS -->
+            </select>
+
+            <label for="booking_date">Ngày đặt:</label>
+            <input type="date" id="booking_date" required>
+
+            <label for="start_time">Giờ bắt đầu:</label>
+            <input type="time" id="start_time" required>
+
+            <label for="end_time">Giờ kết thúc:</label>
+            <input type="time" id="end_time" required>
+
+            <label for="total_price">Tổng tiền (VNĐ):</label>
+            <input type="number" id="total_price" value="200000" required>
+
+            <button type="submit">Xác Nhận Đặt Sân</button>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        // 1. Tải danh sách sân khi mở trang
+        async function loadFields() {
+            try {
+                const res = await fetch('/api/fields');
+                const result = await res.json();
+                
+                const fieldsContainer = document.getElementById('fieldsContainer');
+                const fieldSelect = document.getElementById('field_id');
+                
+                fieldsContainer.innerHTML = '';
+                fieldSelect.innerHTML = '';
+
+                if (result.success && result.data.length > 0) {
+                    result.data.forEach(field => {
+                        // Hiển thị dạng danh sách card
+                        fieldsContainer.innerHTML += `
+                            <div class="field-item">
+                                <h3>${field.name}</h3>
+                                <p>Loại: Sân ${field.type} người</p>
+                                <p>Giá: ${Number(field.price_per_hour).toLocaleString()} đ/giờ</p>
+                            </div>
+                        `;
+                        // Thêm vào dropdown chọn sân
+                        fieldSelect.innerHTML += `<option value="${field.id}">${field.name} (Sân ${field.type} người)</option>`;
+                    });
+                } else {
+                    fieldsContainer.innerHTML = 'Chưa có sân nào trong cơ sở dữ liệu.';
+                }
+            } catch (error) {
+                console.error('Lỗi tải sân:', error);
+            }
+        }
+
+        // 2. Xử lý sự kiện gửi form đặt sân
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const bookingData = {
+                field_id: document.getElementById('field_id').value,
+                booking_date: document.getElementById('booking_date').value,
+                start_time: document.getElementById('start_time').value,
+                end_time: document.getElementById('end_time').value,
+                total_price: document.getElementById('total_price').value
+            };
+
+            const msgElement = document.getElementById('message');
+
+            try {
+                const res = await fetch('/api/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                });
+
+                const result = await res.json();
+
+                if (res.ok && result.success) {
+                    msgElement.style.color = 'green';
+                    msgElement.textContent = '🎉 ' + result.message;
+                } else {
+                    msgElement.style.color = 'red';
+                    msgElement.textContent = '❌ ' + (result.message || 'Lỗi đặt sân!');
+                }
+            } catch (error) {
+                msgElement.style.color = 'red';
+                msgElement.textContent = '❌ Không thể kết nối tới server!';
+            }
+        });
+
+        // Chạy load danh sách khi vào trang
+        loadFields();
+    </script>
+</body>
+</html>
