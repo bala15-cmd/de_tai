@@ -4,10 +4,9 @@
   "description": "He thong quan ly dat san bong",
   "main": "server.js",
   "scripts": {
-   "start": "node server.js",
-  "dev": "nodemon server.js",
-  "push": "git add . && git commit -m \"cap nhat code\" && git push origin main"
-    
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "push": "git add . && git commit -m \"cap nhat code\" && git push origin main"
   },
   "repository": {
     "type": "git",
@@ -24,8 +23,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "mysql2": "^3.9.x"
+    "express": "^4.22.3",
+    "mysql2": "^3.24.6"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sân Bóng - Đặt sân dễ dàng</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #059669;
+            --primary-hover: #047857;
+            --bg-light: #f3f4f6;
+            --dark-text: #1f2937;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--bg-light); color: var(--dark-text); }
+
+        /* Top Header */
+        header {
+            background: #064e3b;
+            color: white;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-area i { font-size: 30px; }
+        .logo-area h1 { font-size: 18px; margin-bottom: 2px; }
+        .logo-area p { font-size: 11px; opacity: 0.8; }
+
+        .search-header { display: flex; align-items: center; background: white; border-radius: 20px; padding: 4px 12px; width: 320px; }
+        .search-header input { border: none; outline: none; width: 100%; padding: 6px; font-size: 13px; }
+        .search-header i { color: #6b7280; }
+
+        .user-nav { display: flex; align-items: center; gap: 20px; }
+        .notification-icon { position: relative; cursor: pointer; font-size: 18px; }
+        .badge-count { position: absolute; top: -6px; right: -8px; background: #ef4444; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px; font-weight: bold; }
+        .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .avatar { width: 32px; height: 32px; background: #d1d5db; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        /* Main Container Layout */
+        .container { display: flex; max-width: 1400px; margin: 20px auto; gap: 20px; padding: 0 15px; }
+
+        /* Sidebar Left */
+        aside { width: 200px; background: white; border-radius: 12px; padding: 15px 10px; height: fit-content; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #4b5563; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+        .menu-item:hover, .menu-item.active { background: #e6f4ea; color: var(--primary); font-weight: bold; }
+        .menu-item i { font-size: 16px; width: 20px; }
+
+        /* Main Content Center */
+        main { flex: 1; }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1529900748604-07564a03e7a6?q=80&w=1000') center/cover;
+            border-radius: 12px;
+            padding: 30px;
+            color: white;
+            margin-bottom: 25px;
+        }
+        .hero-banner h2 { font-size: 24px; margin-bottom: 8px; }
+        .hero-banner p { font-size: 13px; opacity: 0.9; margin-bottom: 20px; }
+
+        .filter-bar {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .filter-item { flex: 1; display: flex; align-items: center; gap: 8px; border: 1px solid #d1d5db; padding: 8px 12px; border-radius: 6px; color: #374151; font-size: 13px; }
+        .filter-item select, .filter-item input { border: none; outline: none; width: 100%; background: transparent; font-size: 13px; }
+        .btn-search { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .btn-search:hover { background: var(--primary-hover); }
+
+        /* Pitches Section */
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .section-header h3 { font-size: 16px; color: #111827; }
+        .see-all { color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 600; }
+
+        .pitch-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .pitch-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .pitch-img { width: 100%; height: 120px; object-fit: cover; }
+        .pitch-info { padding: 12px; }
+        .pitch-name { font-size: 14px; font-weight: bold; margin-bottom: 4px; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pitch-location { font-size: 11px; color: #6b7280; margin-bottom: 6px; }
+        .pitch-rating { font-size: 11px; color: #d97706; margin-bottom: 8px; }
+        .pitch-price { font-size: 13px; font-weight: bold; color: #111827; margin-bottom: 10px; }
+        .pitch-price span { font-size: 11px; font-weight: normal; color: #6b7280; }
+        .btn-book { width: 100%; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; }
+
+        /* Right Panel */
+        .right-panel { width: 300px; display: flex; flex-direction: column; gap: 20px; }
+        .my-bookings { background: white; border-radius: 12px; padding: 15px; }
+        .booking-item { display: flex; gap: 10px; margin-top: 12px; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; }
+        .booking-item:last-child { border-bottom: none; }
+        .booking-img { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; }
+        .booking-details { flex: 1; }
+        .booking-title { font-size: 12px; font-weight: bold; margin-bottom: 3px; }
+        .booking-time { font-size: 10px; color: #6b7280; margin-bottom: 4px; }
+        .status-badge { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        .status-confirmed { background: #d1fae5; color: #059669; }
+        .status-pending { background: #dbeafe; color: #2563eb; }
+        .status-cancelled { background: #f3f4f6; color: #6b7280; }
+
+        /* Promo Card */
+        .promo-card { background: #e6f4ea; border-radius: 12px; padding: 20px; text-align: center; }
+        .promo-card i { font-size: 35px; color: var(--primary); margin-bottom: 10px; }
+        .promo-card h4 { font-size: 14px; margin-bottom: 5px; }
+        .promo-card p { font-size: 11px; color: #4b5563; margin-bottom: 15px; }
+        .btn-promo { background: var(--primary); color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <i class="fa-solid fa-futbol"></i>
+            <div>
+                <h1>Sân Bóng</h1>
+                <p>Đặt sân dễ dàng - Chơi bóng thỏa thích</p>
+            </div>
+        </div>
+        <div class="search-header">
+            <input type="text" placeholder="Tìm sân, địa điểm...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="user-nav">
+            <div class="notification-icon">
+                <i class="fa-regular fa-bell"></i>
+                <span class="badge-count">2</span>
+            </div>
+            <div class="user-profile">
+                <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                <span style="font-size: 13px; font-weight: 500;" id="userNameDisplay">Nguyễn Văn A <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar Menu Left -->
+        <aside>
+            <a href="#" class="menu-item active"><i class="fa-solid fa-house"></i> Trang chủ</a>
+            <a href="#" class="menu-item"><i class="fa-regular fa-calendar-check"></i> Đặt sân</a>
+            <a href="#" class="menu-item"><i class="fa-solid fa-clock-rotate-left"></i> Lịch đặt của tôi</a>
+            <a href="#" class="menu-item"><i class="fa-regular fa-bell"></i> Thông báo <span class="badge-count" style="position:static; margin-left:auto;">2</span></a>
+            <a href="#" class="menu-item"><i class="fa-regular fa-user"></i> Tài khoản</a>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <div class="hero-banner">
+                <h2>Đặt sân bóng nhanh chóng<br>Trải nghiệm thể thao tuyệt vời</h2>
+                <p>Tìm và đặt sân bóng gần bạn chỉ với vài thao tác đơn giản!</p>
+                <div class="filter-bar">
+                    <div class="filter-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <select>
+                            <option>TP. Hồ Chí Minh</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <i class="fa-regular fa-calendar"></i>
+                        <input type="date" value="2025-04-25">
+                    </div>
+                    <div class="filter-item">
+                        <i class="fa-regular fa-clock"></i>
+                        <input type="time" value="17:00">
+                    </div>
+                    <button class="btn-search">Tìm sân</button>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h3>Danh sách sân gần bạn</h3>
+                <a href="#" class="see-all">Xem tất cả &rarr;</a>
+            </div>
+
+            <div class="pitch-grid" id="pitchContainer">
+                <!-- Javascript sẽ tự động load các thẻ sân bóng vào đây -->
+            </div>
+        </main>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div class="my-bookings">
+                <div class="section-header" style="margin-bottom: 5px;">
+                    <h3 style="font-size: 14px;">Lịch đặt sân của tôi</h3>
+                    <a href="#" class="see-all" style="font-size: 11px;">Xem tất cả</a>
+                </div>
+
+                <div class="booking-item">
+                    <img src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=200" class="booking-img">
+                    <div class="booking-details">
+                        <div class="booking-title">Sân Cỏ Nhân Tạo Bình Thạnh</div>
+                        <div class="booking-time"><i class="fa-regular fa-calendar"></i> 25/04/2025 - 17:00 - 19:00</div>
+                        <span class="status-badge status-confirmed"><i class="fa-solid fa-check"></i> Đã xác nhận</span>
+                    </div>
+                </div>
+
+                <div class="booking-item">
+                    <img src="https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=200" class="booking-img">
+                    <div class="booking-details">
+                        <div class="booking-title">Sân Bóng Đá Phú Nhuận</div>
+                        <div class="booking-time"><i class="fa-regular fa-calendar"></i> 27/04/2025 - 19:00 - 21:00</div>
+                        <span class="status-badge status-pending">Chờ xác nhận</span>
+                    </div>
+                </div>
+
+                <div class="booking-item">
+                    <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=200" class="booking-img">
+                    <div class="booking-details">
+                        <div class="booking-title">Sân Bóng Đá Quận 7</div>
+                        <div class="booking-time"><i class="fa-regular fa-calendar"></i> 30/04/2025 - 16:00 - 18:00</div>
+                        <span class="status-badge status-cancelled">Đã hủy</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="promo-card">
+                <i class="fa-solid fa-futbol"></i>
+                <h4>Chơi bóng cùng bạn bè</h4>
+                <p>Sân bóng chất lượng - Dịch vụ uy tín - Giá tốt nhất</p>
+                <a href="#" class="btn-promo">Đặt sân ngay &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load danh sách sân gần bạn
+        const samplePitches = [
+            { name: 'Sân Cỏ Nhân Tạo Bình Thạnh', loc: 'Bình Thạnh, TP. HCM', rating: '4.8 (120 đánh giá)', price: '120.000đ', img: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=400' },
+            { name: 'Sân Bóng Đá Phú Nhuận', loc: 'Phú Nhuận, TP. HCM', rating: '4.6 (98 đánh giá)', price: '100.000đ', img: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=400' },
+            { name: 'Sân Bóng Đá Quận 7', loc: 'Quận 7, TP. HCM', rating: '4.7 (85 đánh giá)', price: '150.000đ', img: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400' },
+            { name: 'Sân Bóng Đá Thủ Đức', loc: 'Thủ Đức, TP. HCM', rating: '4.5 (76 đánh giá)', price: '110.000đ', img: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400' }
+        ];
+
+        const pitchContainer = document.getElementById('pitchContainer');
+        samplePitches.forEach(p => {
+            pitchContainer.innerHTML += `
+                <div class="pitch-card">
+                    <img src="${p.img}" class="pitch-img">
+                    <div class="pitch-info">
+                        <div class="pitch-name">${p.name}</div>
+                        <div class="pitch-location"><i class="fa-solid fa-location-dot"></i> ${p.loc}</div>
+                        <div class="pitch-rating"><i class="fa-solid fa-star"></i> ${p.rating}</div>
+                        <div class="pitch-price">${p.price} <span>/ giờ</span></div>
+                        <button class="btn-book">Đặt sân</button>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>

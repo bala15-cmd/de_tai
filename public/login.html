@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập / Đăng Ký - Hệ Thống Sân Bóng</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #eef2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 350px; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 11px; background: #28a745; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #218838; }
+        .toggle-link { text-align: center; margin-top: 15px; font-size: 14px; }
+        .toggle-link a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2 id="formTitle">🔑 Đăng Nhập</h2>
+        <form id="authForm" onsubmit="handleAuth(event)">
+            <div class="form-group" id="nameGroup" style="display: none;">
+                <label>Họ và Tên</label>
+                <input type="text" id="fullname" placeholder="Nguyễn Văn A">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" required placeholder="example@gmail.com">
+            </div>
+            <div class="form-group">
+                <label>Mật Khẩu</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" id="submitBtn">Đăng Nhập</button>
+        </form>
+
+        <div class="toggle-link">
+            <span id="toggleText">Chưa có tài khoản?</span>
+            <a href="javascript:void(0)" onclick="toggleMode()" id="toggleBtn">Đăng ký ngay</a>
+        </div>
+    </div>
+
+    <script>
+        let isLogin = true;
+
+        function toggleMode() {
+            isLogin = !isLogin;
+            document.getElementById('formTitle').innerText = isLogin ? '🔑 Đăng Nhập' : '📝 Đăng Ký Tài Khoản';
+            document.getElementById('nameGroup').style.display = isLogin ? 'none' : 'block';
+            document.getElementById('submitBtn').innerText = isLogin ? 'Đăng Nhập' : 'Tạo Tài Khoản';
+            document.getElementById('toggleText').innerText = isLogin ? 'Chưa có tài khoản?' : 'Đã có tài khoản?';
+            document.getElementById('toggleBtn').innerText = isLogin ? 'Đăng ký ngay' : 'Đăng nhập';
+        }
+
+        async function handleAuth(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const fullname = document.getElementById('fullname').value;
+
+            const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+            const bodyData = isLogin ? { email, password } : { fullname, email, password };
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bodyData)
+                });
+                const result = await res.json();
+
+                if (result.success) {
+                    if (isLogin) {
+                        alert('Đăng nhập thành công!');
+                        sessionStorage.setItem('user', JSON.stringify(result.user));
+                        
+                        // TỰ ĐỘNG CHUYỂN HƯỚNG THEO ROLE
+                        if (result.user.role === 'admin') {
+                            window.location.href = '/admin.html';
+                        } else {
+                            window.location.href = '/index.html';
+                        }
+                    } else {
+                        alert('Đăng ký thành công! Vui lòng đăng nhập.');
+                        toggleMode();
+                    }
+                } else {
+                    alert('Thất bại: ' + result.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Lỗi kết nối máy chủ!');
+            }
+        }
+    </script>
+</body>
+</html>
