@@ -1,258 +1,577 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sân Bóng - Đặt sân dễ dàng</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #059669;
-            --primary-hover: #047857;
-            --bg-light: #f3f4f6;
-            --dark-text: #1f2937;
-        }
+    <meta name="description" content="Football Hub - Tìm kiếm và đặt sân bóng trực tuyến">
+    <title>Football Hub | Quản lý sân bóng</title>
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--bg-light); color: var(--dark-text); }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        /* Top Header */
-        header {
-            background: #064e3b;
-            color: white;
-            padding: 12px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-area i { font-size: 30px; }
-        .logo-area h1 { font-size: 18px; margin-bottom: 2px; }
-        .logo-area p { font-size: 11px; opacity: 0.8; }
-
-        .search-header { display: flex; align-items: center; background: white; border-radius: 20px; padding: 4px 12px; width: 320px; }
-        .search-header input { border: none; outline: none; width: 100%; padding: 6px; font-size: 13px; }
-        .search-header i { color: #6b7280; }
-
-        .user-nav { display: flex; align-items: center; gap: 20px; }
-        .notification-icon { position: relative; cursor: pointer; font-size: 18px; }
-        .badge-count { position: absolute; top: -6px; right: -8px; background: #ef4444; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px; font-weight: bold; }
-        .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .avatar { width: 32px; height: 32px; background: #d1d5db; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-
-        /* Main Container Layout */
-        .container { display: flex; max-width: 1400px; margin: 20px auto; gap: 20px; padding: 0 15px; }
-
-        /* Sidebar Left */
-        aside { width: 200px; background: white; border-radius: 12px; padding: 15px 10px; height: fit-content; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #4b5563; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-        .menu-item:hover, .menu-item.active { background: #e6f4ea; color: var(--primary); font-weight: bold; }
-        .menu-item i { font-size: 16px; width: 20px; }
-
-        /* Main Content Center */
-        main { flex: 1; }
-
-        /* Hero Banner */
-        .hero-banner {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1529900748604-07564a03e7a6?q=80&w=1000') center/cover;
-            border-radius: 12px;
-            padding: 30px;
-            color: white;
-            margin-bottom: 25px;
-        }
-        .hero-banner h2 { font-size: 24px; margin-bottom: 8px; }
-        .hero-banner p { font-size: 13px; opacity: 0.9; margin-bottom: 20px; }
-
-        .filter-bar {
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .filter-item { flex: 1; display: flex; align-items: center; gap: 8px; border: 1px solid #d1d5db; padding: 8px 12px; border-radius: 6px; color: #374151; font-size: 13px; }
-        .filter-item select, .filter-item input { border: none; outline: none; width: 100%; background: transparent; font-size: 13px; }
-        .btn-search { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; }
-        .btn-search:hover { background: var(--primary-hover); }
-
-        /* Pitches Section */
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .section-header h3 { font-size: 16px; color: #111827; }
-        .see-all { color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 600; }
-
-        .pitch-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .pitch-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .pitch-img { width: 100%; height: 120px; object-fit: cover; }
-        .pitch-info { padding: 12px; }
-        .pitch-name { font-size: 14px; font-weight: bold; margin-bottom: 4px; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .pitch-location { font-size: 11px; color: #6b7280; margin-bottom: 6px; }
-        .pitch-rating { font-size: 11px; color: #d97706; margin-bottom: 8px; }
-        .pitch-price { font-size: 13px; font-weight: bold; color: #111827; margin-bottom: 10px; }
-        .pitch-price span { font-size: 11px; font-weight: normal; color: #6b7280; }
-        .btn-book { width: 100%; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; }
-
-        /* Right Panel */
-        .right-panel { width: 300px; display: flex; flex-direction: column; gap: 20px; }
-        .my-bookings { background: white; border-radius: 12px; padding: 15px; }
-        .booking-item { display: flex; gap: 10px; margin-top: 12px; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; }
-        .booking-item:last-child { border-bottom: none; }
-        .booking-img { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; }
-        .booking-details { flex: 1; }
-        .booking-title { font-size: 12px; font-weight: bold; margin-bottom: 3px; }
-        .booking-time { font-size: 10px; color: #6b7280; margin-bottom: 4px; }
-        .status-badge { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-        .status-confirmed { background: #d1fae5; color: #059669; }
-        .status-pending { background: #dbeafe; color: #2563eb; }
-        .status-cancelled { background: #f3f4f6; color: #6b7280; }
-
-        /* Promo Card */
-        .promo-card { background: #e6f4ea; border-radius: 12px; padding: 20px; text-align: center; }
-        .promo-card i { font-size: 35px; color: var(--primary); margin-bottom: 10px; }
-        .promo-card h4 { font-size: 14px; margin-bottom: 5px; }
-        .promo-card p { font-size: 11px; color: #4b5563; margin-bottom: 15px; }
-        .btn-promo { background: var(--primary); color: white; text-decoration: none; display: inline-block; width: 100%; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: bold; }
-    </style>
+    <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
+    <div class="app-layout">
 
-    <header>
-        <div class="logo-area">
-            <i class="fa-solid fa-futbol"></i>
-            <div>
-                <h1>Sân Bóng</h1>
-                <p>Đặt sân dễ dàng - Chơi bóng thỏa thích</p>
-            </div>
-        </div>
-        <div class="search-header">
-            <input type="text" placeholder="Tìm sân, địa điểm...">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </div>
-        <div class="user-nav">
-            <div class="notification-icon">
-                <i class="fa-regular fa-bell"></i>
-                <span class="badge-count">2</span>
-            </div>
-            <div class="user-profile">
-                <div class="avatar"><i class="fa-solid fa-user"></i></div>
-                <span style="font-size: 13px; font-weight: 500;" id="userNameDisplay">Nguyễn Văn A <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></span>
-            </div>
-        </div>
-    </header>
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="sidebar" id="sidebar">
 
-    <div class="container">
-        <!-- Sidebar Menu Left -->
-        <aside>
-            <a href="#" class="menu-item active"><i class="fa-solid fa-house"></i> Trang chủ</a>
-            <a href="#" class="menu-item"><i class="fa-regular fa-calendar-check"></i> Đặt sân</a>
-            <a href="#" class="menu-item"><i class="fa-solid fa-clock-rotate-left"></i> Lịch đặt của tôi</a>
-            <a href="#" class="menu-item"><i class="fa-regular fa-bell"></i> Thông báo <span class="badge-count" style="position:static; margin-left:auto;">2</span></a>
-            <a href="#" class="menu-item"><i class="fa-regular fa-user"></i> Tài khoản</a>
+            <a href="/" class="brand">
+                <div class="brand-logo">⚽</div>
+                <div class="brand-text">
+                    <strong>FOOTBALL HUB</strong>
+                    <span>Quản lý sân bóng</span>
+                </div>
+            </a>
+
+            <div class="sidebar-label">MENU CHÍNH</div>
+
+            <nav class="sidebar-nav">
+                <a href="#home" class="nav-item active" data-section="home">
+                    <span class="nav-icon">⌂</span>
+                    <span>Trang chủ</span>
+                </a>
+
+                <a href="#fields" class="nav-item" data-section="fields">
+                    <span class="nav-icon">⚽</span>
+                    <span>Đặt sân</span>
+                </a>
+
+                <a href="#bookings" class="nav-item" data-section="bookings">
+                    <span class="nav-icon">▤</span>
+                    <span>Lịch đặt sân</span>
+                </a>
+
+                <a href="#notifications" class="nav-item" data-section="notifications">
+                    <span class="nav-icon">♧</span>
+                    <span>Thông báo</span>
+                    <span class="nav-badge" id="notificationBadge" hidden>0</span>
+                </a>
+
+                <a href="#profile" class="nav-item" data-section="profile">
+                    <span class="nav-icon">♙</span>
+                    <span>Tài khoản</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-label">HỖ TRỢ</div>
+
+            <nav class="sidebar-nav">
+                <a href="#help" class="nav-item" data-section="help">
+                    <span class="nav-icon">?</span>
+                    <span>Hướng dẫn đặt sân</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="support-card">
+                    <div class="support-icon">⚽</div>
+                    <strong>Sẵn sàng ra sân?</strong>
+                    <p>Tìm sân phù hợp và lên lịch thi đấu cùng bạn bè.</p>
+                    <button class="btn btn-light btn-full" id="supportBookBtn">
+                        Tìm sân ngay
+                    </button>
+                </div>
+
+                <div class="user-mini">
+                    <div class="avatar" id="sidebarAvatar">U</div>
+                    <div class="user-mini-info">
+                        <strong id="sidebarUserName">Khách truy cập</strong>
+                        <span id="sidebarUserRole">Người dùng</span>
+                    </div>
+                    <button class="icon-button" id="logoutBtn" title="Đăng xuất" hidden>
+                        ⇥
+                    </button>
+                </div>
+            </div>
         </aside>
 
-        <!-- Main Content -->
-        <main>
-            <div class="hero-banner">
-                <h2>Đặt sân bóng nhanh chóng<br>Trải nghiệm thể thao tuyệt vời</h2>
-                <p>Tìm và đặt sân bóng gần bạn chỉ với vài thao tác đơn giản!</p>
-                <div class="filter-bar">
-                    <div class="filter-item">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <select>
-                            <option>TP. Hồ Chí Minh</option>
-                        </select>
-                    </div>
-                    <div class="filter-item">
-                        <i class="fa-regular fa-calendar"></i>
-                        <input type="date" value="2025-04-25">
-                    </div>
-                    <div class="filter-item">
-                        <i class="fa-regular fa-clock"></i>
-                        <input type="time" value="17:00">
-                    </div>
-                    <button class="btn-search">Tìm sân</button>
+        <!-- ================= MAIN CONTENT ================= -->
+        <main class="main-content">
+
+            <header class="topbar">
+                <button class="icon-button mobile-menu-btn" id="mobileMenuBtn"
+                    aria-label="Mở menu">☰</button>
+
+                <div class="breadcrumb">
+                    <span>Football Hub</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <strong id="breadcrumbCurrent">Trang chủ</strong>
                 </div>
-            </div>
 
-            <div class="section-header">
-                <h3>Danh sách sân gần bạn</h3>
-                <a href="#" class="see-all">Xem tất cả &rarr;</a>
-            </div>
+                <div class="topbar-actions">
+                    <button class="icon-button notification-button"
+                        id="topNotificationBtn" title="Thông báo">
+                        ♧
+                        <span class="notification-dot" id="topNotificationDot" hidden></span>
+                    </button>
 
-            <div class="pitch-grid" id="pitchContainer">
-                <!-- Javascript sẽ tự động load các thẻ sân bóng vào đây -->
+                    <div class="topbar-user">
+                        <div class="avatar avatar-small" id="topAvatar">U</div>
+                        <div class="topbar-user-info">
+                            <strong id="topUserName">Khách truy cập</strong>
+                            <span id="topUserRole">Người dùng</span>
+                        </div>
+                    </div>
+
+                    <a href="/login" class="btn btn-primary btn-small" id="loginButton">
+                        Đăng nhập
+                    </a>
+                </div>
+            </header>
+
+            <div class="page-container">
+
+                <!-- ================ HOME SECTION ================ -->
+                <section class="page-section" id="homeSection">
+
+                    <div class="welcome-row">
+                        <div>
+                            <p class="eyebrow">FOOTBALL HUB · ĐẶT SÂN TRỰC TUYẾN</p>
+                            <h1 id="welcomeTitle">Chào mừng bạn đến với Football Hub!</h1>
+                            <p class="muted">
+                                Tìm sân, chọn giờ và sẵn sàng cho trận đấu tiếp theo.
+                            </p>
+                        </div>
+
+                        <div class="today-label">
+                            <span>◷</span>
+                            <span id="todayDate">Hôm nay</span>
+                        </div>
+                    </div>
+
+                    <!-- HERO -->
+                    <div class="hero-banner">
+                        <div class="hero-overlay"></div>
+
+                        <div class="hero-content">
+                            <span class="hero-tag">⚡ FOOTBALL HUB</span>
+                            <h2>Sẵn sàng cho<br>trận đấu của bạn?</h2>
+                            <p>
+                                Khám phá những sân bóng phù hợp,
+                                đặt lịch nhanh chóng và dễ dàng.
+                            </p>
+                            <button class="btn btn-primary hero-button"
+                                id="heroBookBtn">
+                                Khám phá sân bóng <span>→</span>
+                            </button>
+                        </div>
+
+                        <div class="hero-decoration">
+                            <div class="hero-ball">⚽</div>
+                        </div>
+
+                        <div class="hero-pagination">
+                            <span class="pagination-active"></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <!-- QUICK STATS -->
+                    <div class="stats-grid">
+                        <article class="stat-card">
+                            <div class="stat-icon green">⚽</div>
+                            <div>
+                                <p>Tổng sân đang hoạt động</p>
+                                <h3 id="totalFields">--</h3>
+                                <span class="stat-caption">Sân có thể tìm kiếm</span>
+                            </div>
+                        </article>
+
+                        <article class="stat-card">
+                            <div class="stat-icon blue">▤</div>
+                            <div>
+                                <p>Lịch đặt của tôi</p>
+                                <h3 id="myBookingCount">--</h3>
+                                <span class="stat-caption">Tổng đơn đặt sân</span>
+                            </div>
+                        </article>
+
+                        <article class="stat-card">
+                            <div class="stat-icon orange">◷</div>
+                            <div>
+                                <p>Đơn đang chờ</p>
+                                <h3 id="myPendingCount">--</h3>
+                                <span class="stat-caption">Chờ sân xác nhận</span>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- SEARCH -->
+                    <section class="content-card search-card">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Tìm sân bóng</h2>
+                                <p class="muted">Lọc sân theo nhu cầu của bạn.</p>
+                            </div>
+                            <span class="heading-icon">⌕</span>
+                        </div>
+
+                        <form id="searchForm" class="search-form">
+                            <label class="form-field">
+                                <span>Địa điểm hoặc tên sân</span>
+                                <div class="input-with-icon">
+                                    <span>⌕</span>
+                                    <input type="text" id="searchKeyword"
+                                        placeholder="Ví dụ: Bình Thạnh, Sân A...">
+                                </div>
+                            </label>
+
+                            <label class="form-field">
+                                <span>Loại sân</span>
+                                <select id="searchFieldType">
+                                    <option value="">Tất cả loại sân</option>
+                                    <option value="5 người">Sân 5 người</option>
+                                    <option value="7 người">Sân 7 người</option>
+                                    <option value="11 người">Sân 11 người</option>
+                                </select>
+                            </label>
+
+                            <button type="submit" class="btn btn-primary search-submit">
+                                <span>⌕</span> Tìm kiếm
+                            </button>
+                        </form>
+                    </section>
+
+                    <!-- FIELD LIST -->
+                    <section class="fields-section" id="featuredFields">
+                        <div class="section-heading section-heading-row">
+                            <div>
+                                <p class="eyebrow">KHÁM PHÁ</p>
+                                <h2>Sân bóng dành cho bạn</h2>
+                                <p class="muted">Lựa chọn sân phù hợp cho trận đấu tiếp theo.</p>
+                            </div>
+
+                            <button class="btn btn-outline" id="viewAllFieldsBtn">
+                                Xem tất cả <span>→</span>
+                            </button>
+                        </div>
+
+                        <div class="field-grid" id="fieldGrid">
+                            <div class="loading-card">Đang tải danh sách sân...</div>
+                        </div>
+
+                        <div class="empty-state" id="emptyFields" hidden>
+                            <div class="empty-icon">⚽</div>
+                            <h3>Chưa tìm thấy sân bóng</h3>
+                            <p>Thử thay đổi từ khóa hoặc loại sân bạn đang tìm.</p>
+                            <button class="btn btn-outline" id="resetSearchBtn">
+                                Xóa bộ lọc
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- RECENT BOOKINGS -->
+                    <section class="content-card recent-bookings">
+                        <div class="section-heading section-heading-row">
+                            <div>
+                                <h2>Lịch đặt gần đây</h2>
+                                <p class="muted">Theo dõi trạng thái những lần đặt sân của bạn.</p>
+                            </div>
+                            <button class="text-button" data-goto="bookings">
+                                Xem lịch đặt →
+                            </button>
+                        </div>
+
+                        <div id="recentBookingsList" class="recent-bookings-list">
+                            <p class="muted">Đăng nhập để xem lịch đặt của bạn.</p>
+                        </div>
+                    </section>
+                </section>
+
+                <!-- ================ ALL FIELDS ================ -->
+                <section class="page-section" id="fieldsSection" hidden>
+                    <div class="page-title-row">
+                        <div>
+                            <p class="eyebrow">DANH MỤC SÂN</p>
+                            <h1>Danh sách sân bóng</h1>
+                            <p class="muted">Tìm kiếm và lựa chọn sân bạn muốn đặt.</p>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <form id="allFieldsSearchForm" class="search-form">
+                            <label class="form-field">
+                                <span>Tên sân hoặc địa điểm</span>
+                                <input type="text" id="allFieldsKeyword"
+                                    placeholder="Nhập tên sân hoặc địa điểm">
+                            </label>
+
+                            <label class="form-field">
+                                <span>Loại sân</span>
+                                <select id="allFieldsType">
+                                    <option value="">Tất cả loại sân</option>
+                                    <option value="5 người">Sân 5 người</option>
+                                    <option value="7 người">Sân 7 người</option>
+                                    <option value="11 người">Sân 11 người</option>
+                                </select>
+                            </label>
+
+                            <button class="btn btn-primary" type="submit">Tìm sân</button>
+                        </form>
+                    </div>
+
+                    <div class="field-grid" id="allFieldGrid"></div>
+                </section>
+
+                <!-- ================ BOOKINGS ================ -->
+                <section class="page-section" id="bookingsSection" hidden>
+                    <div class="page-title-row">
+                        <div>
+                            <p class="eyebrow">QUẢN LÝ CÁ NHÂN</p>
+                            <h1>Lịch đặt sân của tôi</h1>
+                            <p class="muted">Theo dõi và quản lý các đơn đặt sân.</p>
+                        </div>
+                    </div>
+
+                    <div class="booking-filter">
+                        <button class="filter-tab active" data-booking-filter="all">Tất cả</button>
+                        <button class="filter-tab" data-booking-filter="pending">Chờ xác nhận</button>
+                        <button class="filter-tab" data-booking-filter="confirmed">Đã xác nhận</button>
+                        <button class="filter-tab" data-booking-filter="cancelled">Đã hủy</button>
+                    </div>
+
+                    <div class="content-card table-card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Mã đơn</th>
+                                        <th>Sân bóng</th>
+                                        <th>Ngày đặt</th>
+                                        <th>Thời gian</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bookingTableBody">
+                                    <tr>
+                                        <td colspan="7" class="table-empty">
+                                            Đăng nhập để xem lịch đặt sân.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================ NOTIFICATIONS ================ -->
+                <section class="page-section" id="notificationsSection" hidden>
+                    <div class="page-title-row">
+                        <div>
+                            <p class="eyebrow">CẬP NHẬT</p>
+                            <h1>Thông báo</h1>
+                            <p class="muted">Các cập nhật liên quan đến lịch đặt sân của bạn.</p>
+                        </div>
+
+                        <button class="btn btn-outline" id="refreshNotificationsBtn">
+                            ↻ Làm mới
+                        </button>
+                    </div>
+
+                    <div class="content-card">
+                        <div id="notificationList" class="notification-list">
+                            <p class="muted">Đăng nhập để xem thông báo.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================ PROFILE ================ -->
+                <section class="page-section" id="profileSection" hidden>
+                    <div class="page-title-row">
+                        <div>
+                            <p class="eyebrow">THÔNG TIN CÁ NHÂN</p>
+                            <h1>Tài khoản của tôi</h1>
+                            <p class="muted">Cập nhật thông tin liên hệ của bạn.</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-layout">
+                        <div class="content-card profile-summary">
+                            <div class="profile-avatar" id="profileAvatar">U</div>
+                            <h2 id="profileDisplayName">Khách truy cập</h2>
+                            <p class="muted" id="profileDisplayEmail">Chưa đăng nhập</p>
+                            <span class="role-pill" id="profileRole">Người dùng</span>
+
+                            <div class="profile-summary-note">
+                                <span>🔒</span>
+                                <p>Không chia sẻ mật khẩu của bạn với người khác.</p>
+                            </div>
+                        </div>
+
+                        <div class="content-card">
+                            <div class="section-heading">
+                                <h2>Thông tin cá nhân</h2>
+                            </div>
+
+                            <form id="profileForm" class="profile-form">
+                                <label class="form-field">
+                                    <span>Họ và tên</span>
+                                    <input type="text" id="profileName"
+                                        maxlength="120" required>
+                                </label>
+
+                                <label class="form-field">
+                                    <span>Email</span>
+                                    <input type="email" id="profileEmail" disabled>
+                                </label>
+
+                                <label class="form-field">
+                                    <span>Số điện thoại</span>
+                                    <input type="tel" id="profilePhone" maxlength="20"
+                                        placeholder="Nhập số điện thoại">
+                                </label>
+
+                                <button type="submit" class="btn btn-primary">
+                                    Lưu thay đổi
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================ HELP ================ -->
+                <section class="page-section" id="helpSection" hidden>
+                    <div class="page-title-row">
+                        <div>
+                            <p class="eyebrow">TRUNG TÂM HỖ TRỢ</p>
+                            <h1>Hướng dẫn đặt sân</h1>
+                            <p class="muted">Các bước để đặt sân bóng trên Football Hub.</p>
+                        </div>
+                    </div>
+
+                    <div class="help-grid">
+                        <article class="content-card help-card">
+                            <div class="help-number">01</div>
+                            <h3>Tìm sân phù hợp</h3>
+                            <p>Nhập địa điểm, tên sân hoặc chọn loại sân bạn cần.</p>
+                        </article>
+
+                        <article class="content-card help-card">
+                            <div class="help-number">02</div>
+                            <h3>Chọn ngày và giờ</h3>
+                            <p>Chọn ngày đá bóng, giờ bắt đầu và giờ kết thúc.</p>
+                        </article>
+
+                        <article class="content-card help-card">
+                            <div class="help-number">03</div>
+                            <h3>Gửi yêu cầu đặt sân</h3>
+                            <p>Kiểm tra giá thuê và gửi yêu cầu đặt sân.</p>
+                        </article>
+
+                        <article class="content-card help-card">
+                            <div class="help-number">04</div>
+                            <h3>Theo dõi xác nhận</h3>
+                            <p>Xem trạng thái đơn trong Lịch đặt sân và mục Thông báo.</p>
+                        </article>
+                    </div>
+
+                    <div class="content-card">
+                        <h2>Lưu ý</h2>
+                        <ul class="help-list">
+                            <li>Bạn cần đăng nhập trước khi đặt sân.</li>
+                            <li>Đơn đặt mới có trạng thái chờ xác nhận.</li>
+                            <li>Khung giờ đã được đặt có thể không còn khả dụng.</li>
+                            <li>Chỉ có thể hủy đơn đang chờ xác nhận bằng chức năng hiện tại.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- ================ FOOTER ================ -->
+                <footer class="page-footer">
+                    <div>
+                        <strong>⚽ FOOTBALL HUB</strong>
+                        <p>Nền tảng quản lý và đặt sân bóng.</p>
+                    </div>
+                    <span>© <span id="currentYear"></span> Football Hub</span>
+                </footer>
+
             </div>
         </main>
-
-        <!-- Right Panel -->
-        <div class="right-panel">
-            <div class="my-bookings">
-                <div class="section-header" style="margin-bottom: 5px;">
-                    <h3 style="font-size: 14px;">Lịch đặt sân của tôi</h3>
-                    <a href="#" class="see-all" style="font-size: 11px;">Xem tất cả</a>
-                </div>
-
-                <div class="booking-item">
-                    <img src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=200" class="booking-img">
-                    <div class="booking-details">
-                        <div class="booking-title">Sân Cỏ Nhân Tạo Bình Thạnh</div>
-                        <div class="booking-time"><i class="fa-regular fa-calendar"></i> 25/04/2025 - 17:00 - 19:00</div>
-                        <span class="status-badge status-confirmed"><i class="fa-solid fa-check"></i> Đã xác nhận</span>
-                    </div>
-                </div>
-
-                <div class="booking-item">
-                    <img src="https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=200" class="booking-img">
-                    <div class="booking-details">
-                        <div class="booking-title">Sân Bóng Đá Phú Nhuận</div>
-                        <div class="booking-time"><i class="fa-regular fa-calendar"></i> 27/04/2025 - 19:00 - 21:00</div>
-                        <span class="status-badge status-pending">Chờ xác nhận</span>
-                    </div>
-                </div>
-
-                <div class="booking-item">
-                    <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=200" class="booking-img">
-                    <div class="booking-details">
-                        <div class="booking-title">Sân Bóng Đá Quận 7</div>
-                        <div class="booking-time"><i class="fa-regular fa-calendar"></i> 30/04/2025 - 16:00 - 18:00</div>
-                        <span class="status-badge status-cancelled">Đã hủy</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="promo-card">
-                <i class="fa-solid fa-futbol"></i>
-                <h4>Chơi bóng cùng bạn bè</h4>
-                <p>Sân bóng chất lượng - Dịch vụ uy tín - Giá tốt nhất</p>
-                <a href="#" class="btn-promo">Đặt sân ngay &rarr;</a>
-            </div>
-        </div>
     </div>
 
-    <script>
-        // Load danh sách sân gần bạn
-        const samplePitches = [
-            { name: 'Sân Cỏ Nhân Tạo Bình Thạnh', loc: 'Bình Thạnh, TP. HCM', rating: '4.8 (120 đánh giá)', price: '120.000đ', img: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=400' },
-            { name: 'Sân Bóng Đá Phú Nhuận', loc: 'Phú Nhuận, TP. HCM', rating: '4.6 (98 đánh giá)', price: '100.000đ', img: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=400' },
-            { name: 'Sân Bóng Đá Quận 7', loc: 'Quận 7, TP. HCM', rating: '4.7 (85 đánh giá)', price: '150.000đ', img: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400' },
-            { name: 'Sân Bóng Đá Thủ Đức', loc: 'Thủ Đức, TP. HCM', rating: '4.5 (76 đánh giá)', price: '110.000đ', img: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400' }
-        ];
+    <!-- ================= BOOKING MODAL ================= -->
+    <div class="modal-backdrop" id="bookingModal" hidden>
+        <section class="modal-panel" role="dialog"
+            aria-modal="true" aria-labelledby="bookingModalTitle">
 
-        const pitchContainer = document.getElementById('pitchContainer');
-        samplePitches.forEach(p => {
-            pitchContainer.innerHTML += `
-                <div class="pitch-card">
-                    <img src="${p.img}" class="pitch-img">
-                    <div class="pitch-info">
-                        <div class="pitch-name">${p.name}</div>
-                        <div class="pitch-location"><i class="fa-solid fa-location-dot"></i> ${p.loc}</div>
-                        <div class="pitch-rating"><i class="fa-solid fa-star"></i> ${p.rating}</div>
-                        <div class="pitch-price">${p.price} <span>/ giờ</span></div>
-                        <button class="btn-book">Đặt sân</button>
-                    </div>
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">ĐẶT SÂN TRỰC TUYẾN</p>
+                    <h2 id="bookingModalTitle">Đặt sân bóng</h2>
                 </div>
-            `;
-        });
-    </script>
+                <button class="icon-button" id="closeBookingModal"
+                    aria-label="Đóng">✕</button>
+            </div>
+
+            <div class="booking-field-preview" id="bookingFieldPreview">
+                <div class="booking-preview-image" id="bookingPreviewImage"></div>
+                <div>
+                    <strong id="bookingFieldName">Tên sân</strong>
+                    <p id="bookingFieldLocation">Địa điểm</p>
+                    <span id="bookingFieldPrice">0 đ/giờ</span>
+                </div>
+            </div>
+
+            <form id="bookingForm" class="modal-form">
+                <input type="hidden" id="bookingFieldId">
+
+                <label class="form-field">
+                    <span>Ngày đặt sân</span>
+                    <input type="date" id="bookingDate" required>
+                </label>
+
+                <div class="form-row">
+                    <label class="form-field">
+                        <span>Giờ bắt đầu</span>
+                        <input type="time" id="bookingStart" min="06:00"
+                            max="22:30" value="18:00" required>
+                    </label>
+
+                    <label class="form-field">
+                        <span>Giờ kết thúc</span>
+                        <input type="time" id="bookingEnd" min="06:30"
+                            max="23:00" value="19:00" required>
+                    </label>
+                </div>
+
+                <label class="form-field">
+                    <span>Ghi chú</span>
+                    <textarea id="bookingNote" rows="3" maxlength="500"
+                        placeholder="Yêu cầu thêm (không bắt buộc)"></textarea>
+                </label>
+
+                <div class="booking-total">
+                    <span>Tạm tính</span>
+                    <strong id="bookingTotal">0 đ</strong>
+                </div>
+
+                <p class="form-hint">
+                    Đơn đặt sẽ ở trạng thái chờ cho đến khi Admin xác nhận.
+                </p>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline"
+                        id="cancelBookingModal">Đóng</button>
+                    <button type="submit" class="btn btn-primary" id="submitBookingBtn">
+                        Xác nhận đặt sân
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- ================= TOAST ================= -->
+    <div id="toastContainer" class="toast-container"
+        aria-live="polite" aria-atomic="true"></div>
+
+    <script src="/app.js" defer></script>
 </body>
 </html>

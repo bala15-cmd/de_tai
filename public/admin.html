@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản trị | FieldBook</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <aside class="sidebar" id="adminSidebar">
+    <div class="brand">
+      <div class="brand-icon">⚽</div>
+      <div>
+        <div class="brand-name">FieldBook</div>
+        <div class="brand-subtitle">Quản trị hệ thống</div>
+      </div>
+    </div>
+
+    <p class="sidebar-label">QUẢN LÝ</p>
+    <nav>
+      <button class="active" data-admin-section="overview">📊 Tổng quan</button>
+      <button data-admin-section="fields">⚽ Quản lý sân</button>
+      <button data-admin-section="bookings">📅 Lịch đặt sân</button>
+      <button data-admin-section="users">👥 Người dùng</button>
+      <button data-admin-section="revenue">💰 Doanh thu</button>
+    </nav>
+
+    <div class="sidebar-spacer"></div>
+    <a href="/">← Về trang khách hàng</a>
+    <button id="adminLogout">↪ Đăng xuất</button>
+  </aside>
+
+  <main class="admin-content">
+    <header class="topbar">
+      <div>
+        <div class="breadcrumb">FieldBook / <strong id="adminBreadcrumb">Tổng quan</strong></div>
+        <h1 class="page-title">Bảng điều khiển</h1>
+      </div>
+      <button class="btn btn-outline" id="adminRefresh">↻ Làm mới</button>
+    </header>
+
+    <section data-admin-panel="overview">
+      <div class="admin-stats">
+        <div class="stat-card">
+          <div class="stat-icon">⚽</div>
+          <div><div class="stat-label">Tổng số sân</div><div class="stat-value" id="statFields">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">📅</div>
+          <div><div class="stat-label">Lịch đặt sân</div><div class="stat-value" id="statBookings">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange">👥</div>
+          <div><div class="stat-label">Người dùng</div><div class="stat-value" id="statUsers">0</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div><div class="stat-label">Doanh thu</div><div class="stat-value" id="statRevenue">0 ₫</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-heading">
+          <div>
+            <h2>Lịch đặt gần đây</h2>
+            <p>Theo dõi và xử lý các yêu cầu đặt sân.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" data-admin-section="bookings">Xem tất cả</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Khách hàng</th><th>Sân</th><th>Ngày</th><th>Thành tiền</th><th>Trạng thái</th><th>Thao tác</th></tr>
+            </thead>
+            <tbody id="recentAdminBookings"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section data-admin-panel="fields" class="hidden">
+      <div class="panel">
+        <div class="section-heading">
+          <div><h2>Danh sách sân bóng</h2><p>Thêm sân mới hoặc thay đổi trạng thái hoạt động.</p></div>
+          <button class="btn btn-primary" id="showAddField">+ Thêm sân</button>
+        </div>
+
+        <form id="addFieldForm" class="hidden">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="fieldName">Tên sân</label>
+              <input id="fieldName" required maxlength="150">
+            </div>
+            <div class="form-group">
+              <label for="fieldType">Loại sân</label>
+              <select id="fieldType" required>
+                <option value="5 người">Sân 5 người</option>
+                <option value="7 người">Sân 7 người</option>
+                <option value="11 người">Sân 11 người</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="fieldPrice">Giá mỗi giờ (VND)</label>
+              <input id="fieldPrice" type="number" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="fieldLocation">Địa chỉ</label>
+              <input id="fieldLocation" required maxlength="255">
+            </div>
+            <div class="form-group">
+              <label for="fieldImage">URL ảnh (không bắt buộc)</label>
+              <input id="fieldImage" type="url">
+            </div>
+            <div class="form-group">
+              <label for="fieldDescription">Mô tả</label>
+              <input id="fieldDescription" maxlength="1000">
+            </div>
+          </div>
+          <button class="btn btn-primary" type="submit">Lưu sân</button>
+          <button class="btn" type="button" id="cancelAddField">Hủy</button>
+        </form>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Tên sân</th><th>Loại</th><th>Giá/giờ</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+            <tbody id="adminFieldsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section data-admin-panel="bookings" class="hidden">
+      <div class="panel">
+        <div class="section-heading"><div><h2>Quản lý lịch đặt</h2><p>Xác nhận, hoàn thành hoặc hủy lịch đặt.</p></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Khách hàng</th><th>Sân</th><th>Ngày</th><th>Giờ</th><th>Thành tiền</th><th>Trạng thái</th><th>Cập nhật</th></tr></thead>
+            <tbody id="adminBookingsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section data-admin-panel="users" class="hidden">
+      <div class="panel">
+        <div class="section-heading"><div><h2>Quản lý người dùng</h2><p>Xem tài khoản và trạng thái hoạt động.</p></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Họ tên</th><th>Email</th><th>Điện thoại</th><th>Vai trò</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+            <tbody id="adminUsersBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section data-admin-panel="revenue" class="hidden">
+      <div class="panel">
+        <div class="section-heading"><div><h2>Báo cáo doanh thu</h2><p>Số liệu doanh thu được tính từ các lịch đặt hoàn thành.</p></div></div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div><div class="stat-label">Tổng doanh thu</div><div class="stat-value" id="revenueTotal">0 ₫</div></div>
+        </div>
+        <div class="table-wrap mt-20">
+          <table>
+            <thead><tr><th>Tháng</th><th>Số lịch hoàn thành</th><th>Doanh thu</th></tr></thead>
+            <tbody id="revenueBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toastContainer" class="toast-container"></div>
+  <script src="/admin.js" defer></script>
+</body>
+</html>
